@@ -1,2 +1,2 @@
 # python
-#depend: python2.7 x64
+# depend: python2.7 x64
