@@ -1,5 +1,5 @@
 # start http server
-1. cmd 'current local'
+1. cmd 'current path'
 2. python HttpServer.py 8080
 
 # test
