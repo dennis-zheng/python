@@ -29,3 +29,5 @@ obj/
 *.exp
 [Ll]ogs*/
 ipch/
+
+*pyc
