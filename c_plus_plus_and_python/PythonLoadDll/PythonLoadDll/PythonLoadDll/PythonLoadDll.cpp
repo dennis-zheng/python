@@ -6,13 +6,24 @@
 #include <mutex>
 #include <map>
 
-struct StructInfo
+typedef struct _tagStructInfo
 {
 	int id;
 	float idF;
-	char* buf;
+} StructInfo;
+
+typedef struct _tagStructBuf
+{
+	char buf[256];
 	int size;
-};
+} StructBuf;
+
+typedef struct _tagStructMultiBuf
+{
+	char* buf[100];
+	int size[100];
+	int count;
+} StructMultiBuf;
 
 class Obj
 {
@@ -67,15 +78,81 @@ PYTHONLOADDLL_EXPORTS void PythonLoadDll_uninit(long handle)
 	RemoveObj(handle);
 }
 
-PYTHONLOADDLL_EXPORTS int PythonLoadDll_process(long handle, int index, const char* buffer, const int size, void* structInfo)
+PYTHONLOADDLL_EXPORTS int PythonLoadDll_process(long handle, int index, const char* buffer, const int size)
 {
-	StructInfo* info = (StructInfo*)structInfo;
-	info->id = handle;
-	info->idF = float(handle) + 0.55;
-	info->size = size;
-	sprintf(info->buf, buffer, info->size);
+	printf("%s handle=%d, index=%d, buffer=%s, size=%d\n", __FUNCTION__, handle, index, buffer, size);
+	return GetObj(handle)->index = index;;
+}
 
-	printf("PythonLoadDll_process id=%d, test1=%f, test2=%s, size=%d\n", info->id, info->idF, info->buf, info->size);
-	printf("PythonLoadDll_process size=%d, buffer=%s\n", size, buffer);
+PYTHONLOADDLL_EXPORTS int PythonLoadDll_processInfo(long handle, int index, void* obj)
+{
+	StructInfo* info = (StructInfo*)obj;
+	printf("%s 0x%p handle=%d, index=%d, id=%d, idF=%f\n", __FUNCTION__, info, handle, index, info->id, info->idF);
 	return GetObj(handle)->index = index;
+}
+
+PYTHONLOADDLL_EXPORTS int PythonLoadDll_processBuf(long handle, int index, void* obj)
+{
+	StructBuf* info = (StructBuf*)obj;
+	printf("%s 0x%p handle=%d, index=%d, buf=%s, size=%d\n", __FUNCTION__, info, handle, index, info->buf, info->size);
+	return GetObj(handle)->index = index;
+}
+
+PYTHONLOADDLL_EXPORTS int PythonLoadDll_processMultiBuf(long handle, int index, void* obj)
+{
+	StructMultiBuf* info = (StructMultiBuf*)obj;
+	for (int i = 0; i < info->count; i++)
+	{
+		printf("%s 0x%p handle=%d, index=%d, buf=%s, size=%d, i=%d\n", __FUNCTION__, info, handle, index, info->buf[i], info->size[i], i);
+	}
+	
+	return GetObj(handle)->index = index;
+}
+
+PYTHONLOADDLL_EXPORTS int PythonLoadDll_processOut(long handle, int index, char* buffer, int* size)
+{
+	char* msg = "PythonLoadDll_processOut";
+	*size = strlen(msg);
+	memcpy(buffer, msg, *size);
+	return GetObj(handle)->index = index;
+}
+
+PYTHONLOADDLL_EXPORTS int PythonLoadDll_processBufOut(long handle, int index, void* obj)
+{
+	StructBuf* info = (StructBuf*)obj;
+	char* msg = "PythonLoadDll_processBufOut";
+	info->size = strlen(msg);
+	memcpy(info->buf, msg, info->size);
+	return GetObj(handle)->index = index;
+}
+
+PYTHONLOADDLL_EXPORTS int PythonLoadDll_processMultiBufOut(long handle, int index, void* obj)
+{
+	StructMultiBuf* info = (StructMultiBuf*)obj;
+	info->count = 5;
+	char* msg = "PythonLoadDll_processMultiBufOut";
+	for (int i = 0; i < info->count; i++)
+	{
+		sprintf(info->buf[i], "%s %d", msg, i);
+		info->size[i] = strlen(info->buf[i]);
+		printf("%s %d\n", __FUNCTION__, i);
+	}
+	for (int i = 0; i < info->count; i++)
+	{
+		printf("%s %s %d 0x%p\n", __FUNCTION__, info->buf[i], info->size[i], info->buf);
+	}
+	return GetObj(handle)->index = index;
+}
+
+/*
+	当用python调用c++是，接口返回数据最好转换为int，用其他类型，会降低效率；
+	可以做如下优化（python端代码，返回结果需除以10000）
+	PYTHONLOADDLL_EXPORTS int PythonLoadDll_processRe(long handle, int index)
+	{
+		return 22.33*10000;
+	}
+*/
+PYTHONLOADDLL_EXPORTS float PythonLoadDll_processRe(long handle, int index)
+{
+	return 22.33;
 }
