@@ -135,12 +135,16 @@ PYTHONLOADDLL_EXPORTS int PythonLoadDll_processMultiBufOut(long handle, int inde
 	{
 		sprintf(info->buf[i], "%s %d", msg, i);
 		info->size[i] = strlen(info->buf[i]);
-		printf("%s %d\n", __FUNCTION__, i);
+		//printf("%s %d\n", __FUNCTION__, i);
 	}
-	for (int i = 0; i < info->count; i++)
-	{
-		printf("%s %s %d 0x%p\n", __FUNCTION__, info->buf[i], info->size[i], info->buf);
-	}
+	//for (int i = 0; i < 100; i++)
+	//{
+	//	printf("%s %d 0x%p\n", __FUNCTION__, i, info->buf[i]);
+	//}
+	//for (int i = 0; i < info->count; i++)
+	//{
+	//	printf("%s %s %d 0x%p\n", __FUNCTION__, info->buf[i], info->size[i], info->buf[i]);
+	//}
 	return GetObj(handle)->index = index;
 }
 

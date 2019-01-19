@@ -12,19 +12,23 @@ lockLoad_ = threading.RLock()
 handle_ = 0
 
 class StructInfo(ctypes.Structure):
-    def __init__(self):
-        pass
-    _fields_ = [('id',ctypes.c_int), ('idF',ctypes.c_float)]
+    _fields_ = [
+        ('id',ctypes.c_int), 
+        ('idF',ctypes.c_float)
+    ]
 
 class StructBuf(ctypes.Structure):
-    def __init__(self):
-        pass
-    _fields_ = [('buf',ctypes.c_char*256), ('size',ctypes.c_int)]
+    _fields_ = [
+        ('buf',ctypes.c_char*256),
+         ('size',ctypes.c_int)
+    ]
 
 class StructMultiBuf(ctypes.Structure):
-    def __init__(self):
-        pass
-    _fields_ = [('buf',ctypes.c_char_p*100),('size', ctypes.c_int*100), ('count', ctypes.c_int)]
+    _fields_ = [
+        ('buf',ctypes.c_char_p*100),
+        ('size', ctypes.c_int*100), 
+        ('count', ctypes.c_int)
+    ]
 
 class PythonLoad(object):
     def __init__(self):
@@ -93,7 +97,8 @@ class PythonLoad(object):
 
     def ProcessOut(self, index):
         global handle_
-        buf = (ctypes.c_char*256)()
+        buf = ctypes.create_string_buffer(256)
+        #buf = (ctypes.c_char*256)()
         size = (ctypes.c_int)()
         try:
             re = handle_.PythonLoadDll_processOut(self.isLoad, index, ctypes.pointer(buf), ctypes.pointer(size))
@@ -118,8 +123,8 @@ class PythonLoad(object):
         global handle_
         info = StructMultiBuf()
         for i in range(100):
-            info.buf[i] = (ctypes.c_char*256)().value
-            #print(info.buf)
+            info.buf[i] = '%s'%(ctypes.create_string_buffer(256))#ctypes.create_string_buffer(256*(i+1)).value#StructBuf().buf
+            #print(info.buf[i])
         try:
             print(info)
             re = handle_.PythonLoadDll_processMultiBufOut(self.isLoad, index, ctypes.pointer(info))
@@ -142,18 +147,18 @@ class PythonLoad(object):
 
 load = PythonLoad()
 load.Process(1)
-print("====================================")
+print("========================================================================")
 load.ProcessInfo(2)
-print("====================================")
+print("========================================================================")
 load.ProcessBuf(3)
-print("====================================")
+print("========================================================================")
 load.ProcessMultiBuf(4)
-print("====================================")
+print("========================================================================")
 load.ProcessOut(44)
-print("====================================")
+print("========================================================================")
 load.ProcessBufOut(5)
-print("====================================")
+print("========================================================================")
 load.ProcessMultiBufOut(6)
-print("====================================")
+print("========================================================================")
 load.ProcessRe(7)
-print("====================================")
+print("========================================================================")
