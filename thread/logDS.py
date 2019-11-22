@@ -17,13 +17,13 @@ def show(log, flag=False):
 		print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())),log)
 		lock.release()
 
-def init(name, dirpath="log"):
+def init(name, dirpath="log/"):
 	global logger
 	try:
 		name = "%s.log"%name
 		if os.path.exists(dirpath) == False:
 			os.makedirs(dirpath)
-		log_name = dirpath + "/" + name
+		log_name = dirpath + name
 		logger = logging.getLogger('[%s]'%name)
 		handler = logging.handlers.RotatingFileHandler(log_name,maxBytes=20*1024*1024,backupCount=10)
 		# handler = logging.handlers.TimedRotatingFileHandler(log_name,'D',1,30)

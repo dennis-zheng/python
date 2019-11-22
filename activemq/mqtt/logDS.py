@@ -12,7 +12,7 @@ is_debug = False
 lock = threading.Lock()
 
 def show(log, flag=False):
-	if flag or False:
+	if flag or True:
 		lock.acquire()
 		print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())),log)
 		lock.release()

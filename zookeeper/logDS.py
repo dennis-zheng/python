@@ -1,29 +1,35 @@
 # -*- coding: utf-8 -*-
+import web
 import logging
+import threading
 import logging.handlers
 import os
 import time
-import threading
 
+#import logging
 #logging.basicConfig()
 
-logger = 0
-is_debug = False
 lock = threading.Lock()
+logger = 0
+handler = 0
+log_name = 0
+is_debug = False
 
-def show(log, flag=False):
-	if flag or False:
+def show(log):
+	if True:
 		lock.acquire()
 		print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())),log)
 		lock.release()
 
-def init(name, dirpath="log"):
+def init(name): 
 	global logger
-	try:
-		name = "%s.log"%name
+	global handler
+	global log_name
+	try: 
+		dirpath = "log/"
 		if os.path.exists(dirpath) == False:
 			os.makedirs(dirpath)
-		log_name = dirpath + "/" + name
+		log_name = dirpath + name
 		logger = logging.getLogger('[%s]'%name)
 		handler = logging.handlers.RotatingFileHandler(log_name,maxBytes=20*1024*1024,backupCount=10)
 		# handler = logging.handlers.TimedRotatingFileHandler(log_name,'D',1,30)
@@ -35,16 +41,16 @@ def init(name, dirpath="log"):
 		logger.addHandler(handler)
 		# logger.setLevel(logging.INFO)
 		logger.setLevel(logging.DEBUG)
-	except Exception as ex:
-		print('log init error %s:%s'%(Exception,ex))
+	except Exception,ex:
+		print 'log init error %s:%s'%(Exception,ex)
 
 def log(level, log):
 	#lock.acquire()
 	try:
 		show(log)
 		logger.log(level,log)
-	except Exception as ex:
-		print('log log %s:%s'%(Exception,ex))
+	except Exception,ex:
+		print 'log log %s:%s'%(Exception,ex)
 	#lock.release()
 
 def info(log):
@@ -52,8 +58,8 @@ def info(log):
 	try:
 		show(log)
 		logger.info(log)
-	except Exception as ex:
-		print('log info %s:%s'%(Exception,ex))
+	except Exception,ex:
+		print 'log info %s:%s'%(Exception,ex)
 	#lock.release()
 
 def warning(log):
@@ -61,8 +67,8 @@ def warning(log):
 	try:
 		show(log)
 		logger.warning(log)
-	except Exception as ex:
-		print('log warning %s:%s'%(Exception,ex))
+	except Exception,ex:
+		print 'log warning %s:%s'%(Exception,ex)
 	#lock.release()
 
 def error(log):
@@ -70,8 +76,8 @@ def error(log):
 	try:
 		show(log)
 		logger.error(log)
-	except Exception as ex:
-		print('log error %s:%s'%(Exception,ex))
+	except Exception,ex:
+		print 'log error %s:%s'%(Exception,ex)
 	#lock.release()
 
 def debug(log):
@@ -82,8 +88,8 @@ def debug(log):
 	try:
 		show(log)
 		logger.debug(log)
-	except Exception as ex:
-		print('log error %s:%s'%(Exception,ex))
+	except Exception,ex:
+		print 'log error %s:%s'%(Exception,ex)
 	#lock.release()
 
 class logDS:
@@ -106,8 +112,8 @@ class logDS:
 		return response
 
 if __name__ == "__main__":
-	print('__main__ begin....')
-	init('logDS')
+	print '__main__ begin....'
+	init('logDS.log')
 	log(logging.DEBUG, 'test log')
 	log(logging.INFO, 'test log')
 	log(logging.WARNING, 'test log')
@@ -121,4 +127,4 @@ if __name__ == "__main__":
 	debug('test debug 11')
 	is_debug = False
 	debug('test debug 22')
-	print('__main__ end....')
+	print '__main__ end....'
