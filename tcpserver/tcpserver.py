@@ -40,9 +40,11 @@ class ClientConnect(Protocol):
         print time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())),'disconnect from',self.transport.client
         pass
     def dataReceived(self, data):
+        print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), 'receive %d '%(len(data)))
         self.lastTime = time.time()
         Msg = 'echo:' + data
-        self.transport.write(Msg)
+        self.transport.write(data)
+        time.sleep(0.5)
 
     def checkConnect(self):
         ret = 0

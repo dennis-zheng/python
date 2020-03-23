@@ -1,0 +1,13 @@
+mqtt：发布，订阅；没有queue；
+stomp：发布，订阅；有queue，topic（即广播）；
+amqp：	类似Zeroc ICE，中间多了负载均衡；
+	（1）client_m（Msg）-> activemq -> server_n(receive msg;process)；
+	（2）client_m（receive response）<- activemq <- server_n(send response)；
+	
+
+openwire：activemq私有协议
+
+
+Message Queuing Telemetry Transport
+Streaming Text Orientated Message Protocol
+Advanced Message Queuing Protocol

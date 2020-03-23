@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import socket
-import commands
 import struct
 import time
 import string
@@ -20,15 +19,18 @@ def send_msg():
     global ClientList
     global lockClientList
 
-    data = 'this is client test'
+    dataT = 'this is client test'
+    data = dataT
+    #for i in range(1000):
+    #    data = dataT + data
     while True:
         lockClientList.acquire()
         try:
             if data != 0:
                 for sockDS in ClientList:
                     sockDS.sendData(data)
-        except Exception,ex:
-            print 'send_msg %s:%s'%(Exception,ex)
+        except(Exception,ex):
+            print('send_msg %s:%s'%(Exception,ex))
         lockClientList.release()
         time.sleep(2)
     thread.exit_thread()   
@@ -39,7 +41,7 @@ class ClientConnect(Protocol):
         self.lastTime = time.time()
         pass
     def connectionMade(self):
-        print time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())),'connect from',self.transport
+        print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())),'connect from',self.transport)
         global ClientList
         global lockClientList
         lockClientList.acquire()
@@ -47,25 +49,27 @@ class ClientConnect(Protocol):
         lockClientList.release()
         pass
     def connectionLost(self, reason):
-        print time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())),'disconnect from',self.transport
+        print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())),'disconnect from',self.transport)
         global ClientList
         global lockClientList
         lockClientList.acquire()
         try:
             ClientList.remove(self)
-        except Exception,ex:
-            print 'ClientList.remove %s:%s'%(Exception,ex)
+        except(Exception,ex):
+            print('ClientList.remove %s:%s'%(Exception,ex))
         lockClientList.release()
         pass
     def dataReceived(self, data):
         self.lastTime = time.time()
-        print 'recv:',data
+        #print 'recv:',data
+        print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), 'receive %d ' % (len(data)))
         pass
     def sendData(self, data):
+        print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), 'send %d ' % (len(data)))
         try:
             self.transport.write(data)
-        except Exception,ex:
-            print 'sendData %s:%s'%(Exception,ex)
+        except(Exception,ex):
+            print('sendData %s:%s'%(Exception,ex))
         pass
 
 class ClientConnectImp(ClientFactory):
