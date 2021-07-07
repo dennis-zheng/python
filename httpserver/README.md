@@ -1,5 +1,5 @@
 # python
-# depend: python2.7 x64
+# depend: python2.7 or python3.x
 
 # start http server
 1. cmd 'current path'
