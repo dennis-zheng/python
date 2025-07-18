@@ -7,7 +7,7 @@ import threading
 
 #logging.basicConfig()
 
-logger = 0
+logger = None
 is_debug = False
 lock = threading.Lock()
 

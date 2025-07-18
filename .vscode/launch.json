@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "debug",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/logger/logDS.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/debug",
+            "env": {},
+            "args": []
+        }
+    ]
+}
